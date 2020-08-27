@@ -1,4 +1,5 @@
 import {tasks} from './sample'; 
+import User from './models/User';
 
 export const resolvers = {
 
@@ -7,8 +8,8 @@ export const resolvers = {
             return 'Hello World con GraphQL'
         },
 
-        greet: (root, {name}, context) => {
-            console.log(context);
+        greet: (root, {name}, ctx) => {
+            console.log(ctx);
             console.log(name);
             return `Hola ${name}`
         },
@@ -16,6 +17,11 @@ export const resolvers = {
         tasks() {
             return tasks;
         },
+
+        async Users() {
+          const users = await User.find();
+          return users;
+        }
         
     },
 
@@ -24,6 +30,21 @@ export const resolvers = {
             input._id = tasks.length;
             tasks.push(input);
             return input;
+        },
+        
+        async createUser(_, { input }) {
+            const newUser = new User(input)
+            await newUser.save();
+            console.log(newUser)
+            return newUser;
+        },
+
+        async deleteUser(_, {_id}) {
+          return  await User.findByIdAndDelete(_id);
+        },
+
+        async updateUser(_, { _id, input }) {
+           return await User.findByIdAndUpdate(_id, input, {new: true});
         }
     }
 }; 
