@@ -16,7 +16,7 @@ const typeDefs = `
         number: Int
     }
 
-    type TaskInput {
+    input TaskInput {
         title: String!
         description: String!
         number: Int
